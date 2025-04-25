@@ -17,8 +17,7 @@ Upload TXT, PDF, or DOCX files and convert their content to speech with automati
 A wide-layout Streamlit interface with RTL support for languages like Urdu and Arabic, and downloadable outputs for scripts and audio files.
 
 ## 🛠️ Technologies Used
-#### Streamlit: 
-For building the interactive web interface.
+**Streamlit:** For building the interactive web interface.
 #### Groq API: 
 For generating educational and video scripts using AI.
 #### Google Cloud Translate API: 
