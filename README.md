@@ -1,6 +1,6 @@
-# 🎈 Blank app template
+# 🎈 AI-Powered Educational Tool
 
-A simple Streamlit app template for you to modify!
+This is a Streamlit-based web application designed to generate educational scripts, create video scene descriptions, translate content into multiple languages, and convert text to speech. The app leverages APIs from Groq, Google Cloud Translate, and Wikipedia to provide a comprehensive tool for educators, content creators, and learners.
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
 
