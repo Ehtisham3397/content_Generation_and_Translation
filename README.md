@@ -6,14 +6,18 @@ A simple Streamlit app template for you to modify!
 
 ### How to run it on your own machine
 
-1. Install the requirements
+1. Clone the Repository
 
    ```
-   $ pip install -r requirements.txt
+   git clone https://github.com/your-username/your-repo-name.git
+   cd your-repo-name
    ```
 
-2. Run the app
+2. Install Requirements
+Create a virtual environment (optional but recommended) and install dependencies:
 
    ```
-   $ streamlit run streamlit_app.py
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
    ```
