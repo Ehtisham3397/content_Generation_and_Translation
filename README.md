@@ -121,3 +121,11 @@ The app supports translation into the following languages:
 - For text-to-speech, supported file formats are TXT, PDF, and DOCX.
 
 - RTL languages (e.g., Urdu, Arabic) are displayed with proper formatting.
+
+## 📧 Contact
+
+For questions or feedback, please open an issue on GitHub or contact [muhammadehtishamali2@example.com].
+
+## 📜 License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
