@@ -5,10 +5,10 @@ This is a Streamlit-based web application designed to generate educational scrip
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
 
 ## ✨ Features
-### Educational Script Generation: 
+#### Educational Script Generation: 
 Generate structured educational scripts based on Wikipedia summaries for a given topic and desired duration.
 
-### Video Script Creation: 
+#### Video Script Creation: 
 Convert educational scripts into detailed video scene descriptions suitable for AI-generated video production.
 
 ### Multilingual Translation: 
