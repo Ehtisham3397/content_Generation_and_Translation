@@ -18,7 +18,9 @@ A wide-layout Streamlit interface with RTL support for languages like Urdu and A
 
 ## 🛠️ Technologies Used
 **Streamlit:** For building the interactive web interface.
+
 **Groq API:** For generating educational and video scripts using AI.
+
 **Google Cloud Translate API:** For translating scripts into multiple languages.
 **Wikipedia API:** For fetching factual content to base scripts on.
 **gTTS (Google Text-to-Speech):** For converting text to speech.
