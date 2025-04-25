@@ -128,4 +128,4 @@ For questions or feedback, please open an issue on GitHub or contact [muhammadeh
 
 ## 📜 License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the Apache-2.0 License. See the LICENSE file for details.
