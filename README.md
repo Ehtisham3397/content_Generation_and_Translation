@@ -79,3 +79,45 @@ Start the Streamlit app:
    streamlit run app.py
    ```
 The app will be available at  ```http://localhost:8501``` in your browser.
+
+## 📖 Usage
+
+#### 1. Script Generator Tab:
+
+- Enter a topic (e.g., "Quantum Mechanics") and select a duration (1-30 minutes).
+
+- Generate an educational script based on Wikipedia content.
+
+- Optionally, create a video script with scene descriptions.
+
+- Translate the script into a supported language (e.g., Urdu, Spanish).
+
+- Download scripts as text files.
+
+#### 2. Text-to-Speech Tab:
+
+- Upload a TXT, PDF, or DOCX file.
+
+- Convert the extracted text to speech with automatic language detection.
+
+- Listen to the audio directly or download it as an MP3 file.
+
+## 🌍 Supported Languages for Translation
+
+The app supports translation into the following languages:
+
+- Urdu, Punjabi, Pashto, Sindhi, Hindi, Arabic, Tamil, Telugu
+
+- Chinese (Simplified & Traditional), Turkish, French, Spanish
+
+- German, Italian, Russian, Japanese
+
+## ⚠️ Notes
+
+- Ensure your API keys are valid and have sufficient quotas for usage.
+
+- The app requires an internet connection for API calls.
+
+- For text-to-speech, supported file formats are TXT, PDF, and DOCX.
+
+- RTL languages (e.g., Urdu, Arabic) are displayed with proper formatting.
