@@ -1,1 +1,9 @@
 streamlit
+groq
+python-dotenv
+wikipedia-api
+requests
+gtts
+PyPDF2
+python-docx
+langdetect
