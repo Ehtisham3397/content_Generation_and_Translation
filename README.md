@@ -5,20 +5,34 @@ This is a Streamlit-based web application designed to generate educational scrip
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
 
 ## ✨ Features
-#### Educational Script Generation: 
+### Educational Script Generation: 
 Generate structured educational scripts based on Wikipedia summaries for a given topic and desired duration.
-
-#### Video Script Creation: 
+### Video Script Creation: 
 Convert educational scripts into detailed video scene descriptions suitable for AI-generated video production.
-
 ### Multilingual Translation: 
 Translate scripts into various languages (e.g., Urdu, Arabic, Spanish, Chinese, etc.) using the Google Cloud Translate API.
-
 ### Text-to-Speech Conversion: 
 Upload TXT, PDF, or DOCX files and convert their content to speech with automatic language detection.
-
 ### Responsive UI: 
 A wide-layout Streamlit interface with RTL support for languages like Urdu and Arabic, and downloadable outputs for scripts and audio files.
+
+## 🛠️ Technologies Used
+#### Streamlit: 
+For building the interactive web interface.
+#### Groq API: 
+For generating educational and video scripts using AI.
+#### Google Cloud Translate API: 
+For translating scripts into multiple languages.
+#### Wikipedia API: 
+For fetching factual content to base scripts on.
+#### gTTS (Google Text-to-Speech): 
+For converting text to speech.
+#### PyPDF2 & python-docx: 
+For extracting text from PDF and DOCX files.
+#### Langdetect: 
+For automatic language detection in uploaded files.
+#### Tempfile: 
+For handling temporary file storage for downloads.
 
 ### How to run it on your own machine
 
