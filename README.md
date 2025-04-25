@@ -37,13 +37,13 @@ A wide-layout Streamlit interface with RTL support for languages like Urdu and A
 
 To run this application locally, ensure you have the following:
 
-   Python 3.8 or higher
+   - Python 3.8 or higher
 
-   A Groq API key (set as ```Groq_API_Key``` in a ```.env``` file)
+   - A Groq API key (set as ```Groq_API_Key``` in a ```.env``` file)
 
-   A Google Cloud Translate API key (set as ```Google_API``` in a ```.env``` file)
+   - A Google Cloud Translate API key (set as ```Google_API``` in a ```.env``` file)
 
-   Required Python packages listed in ```requirements.txt```
+   - Required Python packages listed in ```requirements.txt```
 
 ## 🚀 How to run the App Locally
 
