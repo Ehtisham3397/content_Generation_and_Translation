@@ -39,22 +39,23 @@ To run this application locally, ensure you have the following:
 
    Python 3.8 or higher
 
-   A Groq API key (set as ```Groq_API_Key``` in a .env file)
+   A Groq API key (set as ```Groq_API_Key``` in a ```.env``` file)
 
-   A Google Cloud Translate API key (set as Google_API in a .env file)
+   A Google Cloud Translate API key (set as ```Google_API``` in a ```.env``` file)
 
-   Required Python packages listed in requirements.txt
+   Required Python packages listed in ```requirements.txt```
 
-### How to run it on your own machine
+## 🚀 How to run the App Locally
 
-1. Clone the Repository
+#### 1. Clone the Repository
 
    ```
    git clone https://github.com/your-username/your-repo-name.git
    cd your-repo-name
    ```
 
-2. Install Requirements
+#### 2. Install Requirements
+   
 Create a virtual environment (optional but recommended) and install dependencies:
 
    ```
@@ -62,3 +63,19 @@ Create a virtual environment (optional but recommended) and install dependencies
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    pip install -r requirements.txt
    ```
+#### 3. Set Up Environment Variables
+   
+Create a ```.env``` file in the root directory and add your API keys:
+
+   ```
+   Groq_API_Key=your_groq_api_key
+   Google_API=your_google_cloud_translate_api_key
+   ```
+#### 4. Run the App
+   
+Start the Streamlit app:
+
+   ```
+   streamlit run app.py
+   ```
+The app will be available at  ```http://localhost:8501``` in your browser.
