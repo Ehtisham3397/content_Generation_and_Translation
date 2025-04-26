@@ -155,7 +155,15 @@ def text_to_speech(file):
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
             tts.save(f.name)
             output_file = f.name
-        return f"Language detected: {language}", output_file
+
+        # Read the file content into memory
+        with open(output_file, "rb") as f:
+            audio_data = f.read()
+
+        # Clean up the temporary file
+        os.remove(output_file)
+
+        return f"Language detected: {language}", audio_data
     except Exception as e:
         return f"Error: {str(e)}", None
 
@@ -301,21 +309,34 @@ with tab2:
     st.header("🎙️ Language Detection & Text-to-Speech Converter")
     
     # File upload
-    uploaded_file = st.file_uploader("Upload a TXT, PDF, or DOCX file", type=["txt", "pdf", "docx"])
+    uploaded_file = st.file_uploader("Upload a TXT, PDF, or DOCX file", type=["txt", "pdf", "docx"], key="file_uploader")
+
+    # Clear session state when a new file is uploaded
+    if uploaded_file and ('last_uploaded_file' not in st.session_state or st.session_state['last_uploaded_file'] != uploaded_file.name):
+        st.session_state['audio_data'] = None
+        st.session_state['status'] = None
+        st.session_state['last_uploaded_file'] = uploaded_file.name
 
     # Convert to Speech
     if uploaded_file:
         if st.button("Convert to Speech", key="convert_speech"):
             with st.spinner("Converting to speech..."):
-                status, audio_file = text_to_speech(uploaded_file)
-                st.text(status)
-                if audio_file:
-                    with open(audio_file, "rb") as f:
-                        st.audio(f, format="audio/mp3")
-                    st.download_button(
-                        label="Download Audio",
-                        data=f,
-                        file_name="output.mp3",
-                        mime="audio/mp3",
-                        key="download_audio"
-                    )
+                # Clear previous audio data and status when converting a new file
+                st.session_state['audio_data'] = None
+                st.session_state['status'] = None
+                # Perform text-to-speech conversion
+                status, audio_data = text_to_speech(uploaded_file)
+                st.session_state['status'] = status
+                st.session_state['audio_data'] = audio_data
+
+    # Display audio and download button if audio_data exists in session state
+    if 'audio_data' in st.session_state and st.session_state['audio_data']:
+        st.text(st.session_state['status'])
+        st.audio(st.session_state['audio_data'], format="audio/mp3")
+        st.download_button(
+            label="Download Audio",
+            data=st.session_state['audio_data'],
+            file_name="output.mp3",
+            mime="audio/mp3",
+            key="download_audio"
+        )
