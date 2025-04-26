@@ -233,7 +233,7 @@ with tab1:
 
     # Display Generated Script
     if 'script_content' in st.session_state and st.session_state['script_content'] and not st.session_state['script_content'].startswith("❌"):
-        st.text_area("Generated Script", value=st.session_state['script_content'], height=600, key="script_output")
+        st.text_area("Generated Script", value=st.session_state['script_content'], height=400, key="script_output")
         script_file = save_script(topic, st.session_state['script_content'], "script")
         with open(script_file, "rb") as f:
             st.download_button(
