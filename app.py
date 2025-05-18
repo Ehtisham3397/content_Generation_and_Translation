@@ -9,14 +9,15 @@ import PyPDF2
 from docx import Document
 from langdetect import detect
 import tempfile
+import wikipedia  # Added for search functionality
 
 # Set page configuration to wide layout
 st.set_page_config(layout="wide", page_title="AI-Powered Educational Tool")
 
 # Load environment variables
-load_dotenv()  # Looks for .env file in the current directory
+load_dotenv()
 
-# ✅ Set API Key for Groq
+# Set API Key for Groq
 Groq_API = os.getenv("Groq_API_Key")
 if not Groq_API:
     raise ValueError("❌ Missing GROQ API Key. Set it in environment variables.")
@@ -24,7 +25,7 @@ if not Groq_API:
 # Initialize Groq client
 client = Groq(api_key=Groq_API)
 
-# ✅ Set Google Cloud Translate API Key
+# Set Google Cloud Translate API Key
 GOOGLE_TRANSLATE_API_KEY = os.getenv("Google_API")
 if not GOOGLE_TRANSLATE_API_KEY:
     raise ValueError("❌ Missing Google Cloud Translate API Key. Set it in environment variables.")
@@ -32,25 +33,43 @@ if not GOOGLE_TRANSLATE_API_KEY:
 # --- Educational Script Generator Functions ---
 
 def fetch_wikipedia_summary(topic):
-    """Fetches a Wikipedia summary for the given topic."""
+    """Fetches a Wikipedia summary for the given topic or a related topic."""
     wiki_wiki = wikipediaapi.Wikipedia(user_agent="EducationalScriptApp/1.0", language="en")
     page = wiki_wiki.page(topic)
-    return page.summary if page.exists() else "⚠️ No Wikipedia summary available."
+    
+    if page.exists():
+        return page.summary
+    
+    # If exact topic not found, search for related topics
+    try:
+        search_results = wikipedia.search(topic, results=3)  # Get top 3 related topics
+        for related_topic in search_results:
+            page = wiki_wiki.page(related_topic)
+            if page.exists():
+                return page.summary
+        # If no related topics found, return None to trigger Groq-based generation
+        return None
+    except Exception as e:
+        return None
 
 def generate_script(topic, duration):
-    """Generates an educational script using Groq AI."""
+    """Generates an educational script using Groq AI, with or without Wikipedia content."""
     try:
         factual_content = fetch_wikipedia_summary(topic)
-        if "No Wikipedia summary available" in factual_content:
-            return "⚠️ No relevant data found on Wikipedia."
-
         words_per_minute = 130
         target_words = duration * words_per_minute
 
+        if factual_content:
+            # Wikipedia content available, format it into a script
+            prompt = f"Format the following factual content into an educational script in English with approximately {target_words} words. Do not include extra text like 'Here is the formatted script' or descriptions.\n\n{factual_content}"
+        else:
+            # No Wikipedia content, generate a script directly
+            prompt = f"Generate an educational script in English on the topic '{topic}' with approximately {target_words} words. Ensure the content is factual, engaging, and suitable for an educational video. Do not include extra text like 'Here is the formatted script' or descriptions."
+
         response = client.chat.completions.create(
             messages=[
-                {"role": "system", "content": "You are an AI assistant that formats Wikipedia content into structured educational scripts. Start directly with the script content, focusing on the topic. Do NOT include any introductory phrases like 'Here is a formatted script', 'This script contains', or any mention of word count or script details. Do NOT include unnecessary descriptions or metadata."},
-                {"role": "user", "content": f"Format the following factual content into an educational script in English with approximately {target_words} words. Do not include extra text like 'Here is the formatted script' or descriptions.\n\n{factual_content}"}
+                {"role": "system", "content": "You are an AI assistant that creates structured educational scripts. Start directly with the script content, focusing on the topic. Do NOT include introductory phrases, word counts, or metadata."},
+                {"role": "user", "content": prompt}
             ],
             model="llama3-70b-8192"
         )
@@ -82,11 +101,8 @@ def translate_script(script_content, target_language):
         if not script_content or script_content.startswith("❌"):
             return "⚠️ No valid script content to translate."
 
-        # Split the script into paragraphs based on double line breaks
         paragraphs = script_content.split("\n\n")
         translated_paragraphs = []
-
-        # Google Cloud Translate REST API endpoint
         url = "https://translation.googleapis.com/language/translate/v2"
 
         for paragraph in paragraphs:
@@ -104,7 +120,6 @@ def translate_script(script_content, target_language):
             translated_text = response.json()["data"]["translations"][0]["translatedText"]
             translated_paragraphs.append(translated_text)
 
-        # Join paragraphs with double line breaks
         translated_text = "\n\n".join(translated_paragraphs)
         return translated_text
     except Exception as e:
@@ -156,13 +171,10 @@ def text_to_speech(file):
             tts.save(f.name)
             output_file = f.name
 
-        # Read the file content into memory
         with open(output_file, "rb") as f:
             audio_data = f.read()
 
-        # Clean up the temporary file
         os.remove(output_file)
-
         return f"Language detected: {language}", audio_data
     except Exception as e:
         return f"Error: {str(e)}", None
@@ -171,13 +183,11 @@ def text_to_speech(file):
 
 st.title("🎬 AI-Powered Educational Tool")
 
-# Create tabs
 tab1, tab2 = st.tabs(["Script Generator", "Text-to-Speech"])
 
 with tab1:
     st.header("🎬 AI-Powered Educational Script Generator")
     
-    # Add custom CSS for better spacing, RTL support, and wider content
     st.markdown("""
         <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
         <style>
@@ -202,36 +212,30 @@ with tab1:
             overflow-y: auto;
             width: 100% !important;
         }
-        /* Increase width of input fields and buttons */
         .stTextInput, .stSlider, .stSelectbox, .stButton {
             width: 100% !important;
         }
-        /* Ensure columns use full width */
         .stColumn {
             width: 100% !important;
         }
         </style>
     """, unsafe_allow_html=True)
 
-    # Input fields
-    col1, col2 = st.columns([1, 1])  # Equal width columns
+    col1, col2 = st.columns([1, 1])
     with col1:
         topic = st.text_input("Enter Topic", placeholder="e.g., Quantum Mechanics")
     with col2:
         duration = st.slider("Duration (minutes)", min_value=1, max_value=30, value=2, step=1)
 
-    # Clear All Content Button
     if st.button("Clear All Content", key="clear_content"):
         st.session_state.clear()
-        st.rerun()  # Updated from st.experimental_rerun()
+        st.rerun()
 
-    # Generate Script Button
     if st.button("Generate Script", key="generate_script"):
         with st.spinner("Generating script..."):
             script_content = generate_script(topic, duration)
             st.session_state['script_content'] = script_content
 
-    # Display Generated Script
     if 'script_content' in st.session_state and st.session_state['script_content'] and not st.session_state['script_content'].startswith("❌"):
         st.text_area("Generated Script", value=st.session_state['script_content'], height=400, key="script_output")
         script_file = save_script(topic, st.session_state['script_content'], "script")
@@ -244,14 +248,12 @@ with tab1:
                 key="download_script"
             )
 
-    # Generate Video Script Button
     if 'script_content' in st.session_state and st.session_state['script_content'] and not st.session_state['script_content'].startswith("❌"):
         if st.button("Generate Script for Video", key="generate_video_script"):
             with st.spinner("Generating video script..."):
                 video_script_content = generate_video_script(st.session_state['script_content'])
                 st.session_state['video_script_content'] = video_script_content
 
-    # Display Video Script
     if 'video_script_content' in st.session_state and st.session_state['video_script_content'] and not st.session_state['video_script_content'].startswith("❌"):
         st.text_area("Generated Video Script", value=st.session_state['video_script_content'], height=600, key="video_script_output")
         video_script_file = save_script(topic, st.session_state['video_script_content'], "video_script")
@@ -264,7 +266,6 @@ with tab1:
                 key="download_video_script"
             )
 
-    # Translate Script
     st.subheader("🌍 Translate Script")
     language_options = [
         ("Urdu", "ur"), ("Punjabi", "pa"), ("Pashto", "ps"), ("Sindhi", "sd"), ("Hindi", "hi"),
@@ -283,9 +284,7 @@ with tab1:
                 translated_content = translate_script(st.session_state['script_content'], target_language)
                 st.session_state['translated_content'] = translated_content
 
-    # Display Translated Script with RTL support using st.markdown
     if 'translated_content' in st.session_state and st.session_state['translated_content'] and not st.session_state['translated_content'].startswith("❌"):
-        # Escape HTML characters to prevent rendering issues
         translated_content_html = st.session_state['translated_content'].replace("&", "&").replace("<", "<").replace(">", ">")
         st.markdown(
             f"""
@@ -308,28 +307,22 @@ with tab1:
 with tab2:
     st.header("🎙️ Language Detection & Text-to-Speech Converter")
     
-    # File upload
     uploaded_file = st.file_uploader("Upload a TXT, PDF, or DOCX file", type=["txt", "pdf", "docx"], key="file_uploader")
 
-    # Clear session state when a new file is uploaded
     if uploaded_file and ('last_uploaded_file' not in st.session_state or st.session_state['last_uploaded_file'] != uploaded_file.name):
         st.session_state['audio_data'] = None
         st.session_state['status'] = None
         st.session_state['last_uploaded_file'] = uploaded_file.name
 
-    # Convert to Speech
     if uploaded_file:
         if st.button("Convert to Speech", key="convert_speech"):
             with st.spinner("Converting to speech..."):
-                # Clear previous audio data and status when converting a new file
                 st.session_state['audio_data'] = None
                 st.session_state['status'] = None
-                # Perform text-to-speech conversion
                 status, audio_data = text_to_speech(uploaded_file)
                 st.session_state['status'] = status
                 st.session_state['audio_data'] = audio_data
 
-    # Display audio and download button if audio_data exists in session state
     if 'audio_data' in st.session_state and st.session_state['audio_data']:
         st.text(st.session_state['status'])
         st.audio(st.session_state['audio_data'], format="audio/mp3")
