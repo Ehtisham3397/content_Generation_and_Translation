@@ -124,7 +124,7 @@ The app supports translation into the following languages:
 
 ## 📧 Contact
 
-For questions or feedback, please open an issue on GitHub or contact [muhammadehtishamali2@example.com].
+For questions or feedback, please open an issue on GitHub or contact [muhammadehtishamali2@gmail.com].
 
 ## 📜 License
 
